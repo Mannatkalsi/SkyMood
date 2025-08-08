@@ -19,7 +19,6 @@ function displayWeather(city) {
         var icon = data.condition.icon_url;
         var now = new Date();
         var day = now.toLocaleDateString(undefined, { weekday: "long" });
-        var date = now.toLocaleDateString();
         var time = now.toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -31,7 +30,7 @@ function displayWeather(city) {
               <p>Temperature: ${Math.round(data.temperature.current)}°C</p>
               <p>Humidity: ${Math.round(data.humidity)}%</p>
               <p>Wind: ${Math.round(data.wind.speed)} km/h</p>
-              <p>${day}, ${date} | ${time}</p>
+              <p>${day} | ${time}</p>
             `;
       } else {
         errorMessage.style.display = "block";
