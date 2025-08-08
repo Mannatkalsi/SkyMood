@@ -1,74 +1,72 @@
-var API_KEY = "5ff063d22bba104fe88e5b0o0a3edt8a";
-var form = document.getElementById("weatherForm");
-var weatherDisplay = document.getElementById("weatherDisplay");
-var errorMessage = document.getElementById("errorMessage");
+function formatDateTime(timestamp) {
+  const now = new Date(timestamp * 1000);
+  const options = { weekday: "long", hour: "2-digit", minute: "2-digit" };
+  return now.toLocaleDateString("en-US", options);
+}
 
-function displayWeather(city) {
-  var xhr = new XMLHttpRequest();
-  var url =
-    "https://api.shecodes.io/weather/v1/current?query=" +
-    encodeURIComponent(city) +
-    "&key=" +
-    API_KEY;
+function updateWeather(data) {
+  document.getElementById("city").textContent = data.city;
+  document.getElementById("temperature").textContent =
+    "🌡️ Temperature: " + Math.round(data.temperature.current) + "°C";
+  document.getElementById("wind").textContent =
+    "💨 Wind: " + Math.round(data.wind.speed) + " km/h";
+  document.getElementById("humidity").textContent =
+    "💧 Humidity: " +
+    (data.temperature.humidity !== undefined
+      ? Math.round(data.temperature.humidity) + "%"
+      : "N/A");
+  document.getElementById("icon").setAttribute("src", data.condition.icon_url);
+  document.getElementById("date-time").textContent =
+    "🕒 " + formatDateTime(data.time);
+}
+
+function showError(message) {
+  document.getElementById("error-message").textContent = message;
+}
+
+function fetchWeather(city) {
+  const xhr = new XMLHttpRequest();
+  const apiKey = "5ff063d22bba104fe88e5b0o0a3edt8a";
+  const url = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}`;
   xhr.open("GET", url, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
-        errorMessage.style.display = "none";
-        var icon = data.condition.icon_url;
-        var now = new Date();
-        var day = now.toLocaleDateString(undefined, { weekday: "long" });
-        var time = now.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        weatherDisplay.innerHTML = `
-              <h3>${data.city}</h3>
-              <img src="${icon}" alt="weather icon" />
-              <p>${data.condition.description}</p>
-              <p>Temperature: ${Math.round(data.temperature.current)}°C</p>
-              <p>Humidity: ${
-                data.humidity ? Math.round(data.humidity) + "%" : "N/A"
-              }</p>
-              <p>Wind: ${Math.round(data.wind.speed)} km/h</p>
-              <p>${day} | ${time}</p>
-            `;
-      } else {
-        errorMessage.style.display = "block";
-        weatherDisplay.innerHTML = "";
-      }
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const response = JSON.parse(xhr.responseText);
+      updateWeather(response);
+      showError("");
+    } else {
+      showError("City not found. Please try again.");
     }
+  };
+  xhr.onerror = function () {
+    showError("Failed to connect. Check your internet connection.");
   };
   xhr.send();
 }
 
-form.addEventListener("submit", function (e) {
+function detectLocation() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://ipapi.co/json/", true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const location = JSON.parse(xhr.responseText);
+      fetchWeather(location.city || "Melbourne");
+    } else {
+      fetchWeather("Melbourne");
+    }
+  };
+  xhr.onerror = function () {
+    fetchWeather("Melbourne");
+  };
+  xhr.send();
+}
+
+document.getElementById("search-form").addEventListener("submit", function (e) {
   e.preventDefault();
-  var city = document.getElementById("cityInput").value;
-  if (city) displayWeather(city);
-});
-
-document.getElementById("modeToggle").addEventListener("change", function () {
-  document.body.classList.toggle("dark-mode");
-});
-
-// Auto-load local weather using geolocation
-window.onload = function () {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      var lat = position.coords.latitude;
-      var lon = position.coords.longitude;
-      var xhr = new XMLHttpRequest();
-      var url = `https://api.shecodes.io/weather/v1/current?lon=${lon}&lat=${lat}&key=${API_KEY}`;
-      xhr.open("GET", url, true);
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          displayWeather(data.city);
-        }
-      };
-      xhr.send();
-    });
+  const city = document.getElementById("search-input").value.trim();
+  if (city) {
+    fetchWeather(city);
   }
-};
+});
+
+detectLocation();

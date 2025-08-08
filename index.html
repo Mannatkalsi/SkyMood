@@ -17,24 +17,27 @@
     <title>SkyMood App</title>
   </head>
   <body>
-    <div class="app-container">
-      <header>
-        <div class="logo">SkyMood</div>
-        <div class="toggle-container">
-          <label class="switch">
-            <input type="checkbox" id="modeToggle" />
-            <span class="slider"></span>
-          </label>
-        </div>
-      </header>
-      <form id="weatherForm">
-        <input type="text" id="cityInput" placeholder="Enter city" required />
-        <input type="submit" id="submitInput" value="Search" />
+    <div class="weather-container">
+      <h1 id="city">Loading...</h1>
+      <img id="icon" src="" alt="weather icon" />
+      <h2 id="temperature">--°C</h2>
+
+      <form id="search-form">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Enter city..."
+          required
+        />
+        <input type="submit" value="Search" />
       </form>
-      <div id="weatherDisplay" class="weather-card"></div>
-      <p class="error-message" id="errorMessage">
-        City not found. Please try again.
-      </p>
+      <p id="error-message"></p>
+
+      <div class="details-grid">
+        <div class="card" id="wind">💨 Wind: -- km/h</div>
+        <div class="card" id="humidity">💧 Humidity: --%</div>
+        <div class="card" id="date-time">🕒 --</div>
+      </div>
       <footer>
         <p>
           This project was coded by
