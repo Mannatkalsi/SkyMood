@@ -28,7 +28,9 @@ function displayWeather(city) {
               <img src="${icon}" alt="weather icon" />
               <p>${data.condition.description}</p>
               <p>Temperature: ${Math.round(data.temperature.current)}°C</p>
-              <p>Humidity: ${Math.round(data.humidity)}%</p>
+              <p>Humidity: ${
+                data.humidity ? Math.round(data.humidity) + "%" : "N/A"
+              }</p>
               <p>Wind: ${Math.round(data.wind.speed)} km/h</p>
               <p>${day} | ${time}</p>
             `;
