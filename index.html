@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="src/index.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
@@ -15,33 +17,41 @@
     <title>SkyMood App</title>
   </head>
   <body>
-    <header>
+    <div class="app-container">
+      <header>
+        <div class="logo">SkyMood</div>
+        <div class="toggle-container">
+          <label class="switch">
+            <input type="checkbox" id="modeToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </header>
       <form id="weatherForm">
-        <input
-          type="text"
-          id="cityInput"
-          name="city"
-          placeholder="Enter city name"
-          required
-        />
+        <input type="text" id="cityInput" placeholder="Enter city" required />
         <input type="submit" id="submitInput" value="Search" />
       </form>
-    </header>
-    <footer>
-      <p>
-        This project was coded by
-        <a href="https://github.com/Mannatkalsi" target="_blank"
-          >Mannat Kalsi</a
-        >
-        and is
-        <a href="https://github.com/Mannatkalsi/SkyMood" target="_blank">
-          on GitHub</a
-        >
-        and
-        <a href="https://skymo0d.netlify.app/" target="_blank"
-          >hosted on Netlify</a
-        >
+      <div id="weatherDisplay" class="weather-card"></div>
+      <p class="error-message" id="errorMessage">
+        City not found. Please try again.
       </p>
-    </footer>
+      <footer>
+        <p>
+          This project was coded by
+          <a href="https://github.com/Mannatkalsi" target="_blank"
+            >Mannat Kalsi</a
+          >
+          and is
+          <a href="https://github.com/Mannatkalsi/SkyMood" target="_blank"
+            >on GitHub</a
+          >
+          and
+          <a href="https://skymo0d.netlify.app/" target="_blank"
+            >hosted on Netlify</a
+          >
+        </p>
+      </footer>
+    </div>
+    <script src="src/index.js"></script>
   </body>
 </html>
